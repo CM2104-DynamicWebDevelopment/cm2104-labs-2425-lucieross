@@ -40,6 +40,8 @@ li {
 .BlogPost{
     float:left;
     background-color: lightblue;
+    width:50%;
+    height: 100%;
 }
 
 #PageFooter{
@@ -48,7 +50,7 @@ li {
 
 #PageContent{
     clear: both;
-    height: 400px;
+    height: 100%;
     border: 1px dotted red;
 }
 
@@ -57,24 +59,21 @@ li {
     width: 150px;
 }
 
-.BlogPostContent{
-    width: 500px;
-}
-
 #ImgGallery{
     float: right;
     display: inline;
-    width:350px;
+    width:50%;
 }
 
-.ImgGal{
-    width: 100px;
-    height:100px;
-    padding:5px;
-    display: inline;
-}
 
-.ImageComment{
-    width: 325px;
+.flex_container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
-
+  
+.ImgGal {
+    width: 150px; 
+    margin-bottom: 2%; 
+    position: relative;
+}
