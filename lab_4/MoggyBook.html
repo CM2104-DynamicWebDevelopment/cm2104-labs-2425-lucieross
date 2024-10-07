@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moggybook Registration</title>
+    <script>
+        function testResults(form) {
+            // Grab form element values and store as variables
+            var username = form.username.value;
+            var breed = form.breed.value;
+            var email = form.email.value;
+            var homepage = form.homepage.value;
+            var DOB = form.DOB.value;
+            var about = form.about.value;
+
+            // Complete alert message
+            alert("You registered: \n" + 
+                  "Username: " + username + "\n" + 
+                  "Breed: " + breed + "\n" + 
+                  "Email: " + email + "\n" + 
+                  "Homepage: " + homepage + "\n" + 
+                  "Date Of Birth: " + DOB + "\n" + 
+                  "About: " + about);
+        }
+    </script>
+</head>
+<body>
+    <h1>Moggybook!</h1>
+
+    <form onsubmit="return testResults(this);">
+        <table border="0" cellspacing="5" cellpadding="5">
+            <tr>
+                <td>Username:</td>
+                <td><input type="text" name="username"></td>
+            </tr>
+            <tr>
+                <td>Breed:</td>
+                <td><input type="text" name="breed"></td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td><input type="email" name="email"></td>
+            </tr>
+            <tr>
+                <td>Homepage:</td>
+                <td><input type="text" name="homepage"></td>
+            </tr>
+            <tr>
+                <td>Date Of Birth:</td>
+                <td><input type="date" name="DOB"></td>
+            </tr>
+            <tr>
+                <td>About:</td>
+                <td><textarea name="about" rows="4" cols="30"></textarea></td>
+            </tr>
+        </table>
+        <input type="submit" value="Submit"/>
+    </form>
+</body>
+</html>
