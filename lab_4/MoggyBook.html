@@ -28,7 +28,7 @@
 <body>
     <h1>Moggybook!</h1>
 
-    <form onsubmit="return testResults(this);">
+    <form>
         <table border="0" cellspacing="5" cellpadding="5">
             <tr>
                 <td>Username:</td>
@@ -55,7 +55,7 @@
                 <td><textarea name="about" rows="4" cols="30"></textarea></td>
             </tr>
         </table>
-        <input type="submit" value="Submit"/>
+        <input type="submit" value="Submit" onclick="testResults(this.form);"/>
     </form>
 </body>
 </html>
