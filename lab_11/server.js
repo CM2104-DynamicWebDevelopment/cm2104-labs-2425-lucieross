@@ -27,22 +27,25 @@ app.get('/calc', function(req, res) {
     var y = parseFloat(req.query.y);  
     var operator = req.query.operator;  
 
+    var result;
+
     switch (operator) {
         case 'add':
-            res.send(x + y);
+            result =x + y;
             break;
         case 'sub':
-            res.send(x - y);
+            result = x - y;
             break;
         case 'mul':
-            res.send(x * y);
+            result = x * y;
             break;
         case 'div':
-            res.send(x / y);
+            result = x / y;
             break;
         default:
-            return res.status(400).send("");
+            return result = null
     }
+    res.send(result.toString());
 });
 
 
