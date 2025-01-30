@@ -10,7 +10,7 @@ app.get('/test', function(req, res){
     res.send("this is route 2");
 });
 
-app.get(function (req, res) {
+app.get( '/joke', function (req, res) {
     res.writeHead(200, {'Content-Type': 'text/html'});
     var randomJoke = knockknock()
     res.end(randomJoke)
