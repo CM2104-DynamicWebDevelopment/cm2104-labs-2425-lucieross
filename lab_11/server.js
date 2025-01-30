@@ -42,8 +42,6 @@ app.get('/calc', function(req, res) {
         case 'div':
             result = x / y;
             break;
-        default:
-            return result = null
     }
     res.send(result.toString());
 });
