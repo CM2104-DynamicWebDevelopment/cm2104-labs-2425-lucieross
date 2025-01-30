@@ -19,7 +19,31 @@ app.get( '/joke', function (req, res) {
 app.get('/add', function(req, res){
     var x = parseInt(req.query.x);
     var y = parseInt(req.query.y);
-     res.send("X + Y="+(x+y));
+     res.send("X + Y=" + (x+y));
 });
+
+app.get('/calc', function(req, res) {
+    var x = parseFloat(req.query.x);  
+    var y = parseFloat(req.query.y);  
+    var operator = req.query.operator;  
+
+    switch (operator) {
+        case 'add':
+            res.send(x + y);
+            break;
+        case 'sub':
+            res.send(x - y);
+            break;
+        case 'mul':
+            res.send(x * y);
+            break;
+        case 'div':
+            res.send(x / y);
+            break;
+        default:
+            return res.status(400).send("");
+    }
+});
+
 
 app.listen(8080);
