@@ -61,11 +61,16 @@ app.post('/postform', function(req, res) { //post form route
     res.send("Hi " + name + ", I am sure you will " + quest + ".");
 });
 
-app.get('/user/:userId/books/:bookId', function(req, res) { //books route
+app.get('/user/:userId/books/:bookId', function(req, res) { //books route https://pantherdallas-tribunechris-8080.codio.io/user/166/books/2
     var userId = req.params.userId;
     var bookId = req.params.bookId;
 
-    res.send("User ID: "+ userId+ " Book ID:" +bookId+ ".");
+    res.send("User ID: "+ userId+ " Book ID:" + bookId+ ".");
 });
+
+app.use(function ( req, res, next) { //404 page
+    res.send("This page does not exist!");
+})
+
 
 app.listen(8080);
