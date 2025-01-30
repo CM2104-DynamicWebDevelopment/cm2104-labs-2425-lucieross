@@ -55,10 +55,10 @@ app.get('/getform', function(req, res){ //handles the form request
      res.send("Hi "+name+" I am sure you will "+quest) ;
 });
 
-app.post('/postform', function(req, res){ //post form request
+app.post('/postform', function(req, res) { //post form route
     var name = req.body.name;
     var quest = req.body.quest;
-     res.send("Hi "+name+" I am sure you will "+quest) ;
+    res.send("Hi " + name + ", I am sure you will " + quest + ".");
 });
 
 app.listen(8080);
