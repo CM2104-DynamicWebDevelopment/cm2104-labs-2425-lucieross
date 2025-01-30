@@ -61,4 +61,11 @@ app.post('/postform', function(req, res) { //post form route
     res.send("Hi " + name + ", I am sure you will " + quest + ".");
 });
 
+app.get('/user/:userId/books/:bookId', function(req, res) { //books route
+    var userId = req.params.userId;
+    var bookId = req.params.bookId;
+
+    res.send("User ID: "+ userId+ " Book ID:" +bookId+ ".");
+});
+
 app.listen(8080);
