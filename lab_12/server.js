@@ -63,13 +63,13 @@ async function getTopTracks(artistId, res) {
     spotifyAPI.getArtistTopTracks(artistId, 'GB')
         .then(function (data) {
             var topTracks = data.body.tracks;
-            var HTMLResponse = "<h2>Top Tracks</h2>";
-
+    
             if (topTracks && topTracks.length > 0) { 
                 for (var i = 0; i < topTracks.length; i++) {
                     var track = topTracks[i];
                     HTMLResponse += 
                         "<div>" +
+                            "<h2>Top Tracks</h2>" +
                             "<h3>" + track.name + "</h3>" +
                             "<h4>" + track.artists[0].name + "</h4>" +
                             "<img src='" + track.album.images[0].url + "'>" +
