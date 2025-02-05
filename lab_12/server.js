@@ -47,8 +47,10 @@ async function getTracks(searchterm, res) {
                 "<img src = '"+ track.album.images[0].url+"'>"+
                 "<div>" + //added div for formatting
                     "<a href='" + track.external_urls.spotify + "'>Track details</a>" +
-                    "<a href='/artistTopTracks/" + track.artists[0].id + "'>Get Top Tracks</a>" +
                 "</div>" +
+                "</div>" + //formatting
+                "<a href='/artistTopTracks/" + track.artists[0].id + "'>Get Top Tracks</a>" +
+                "</div>" + 
             "</div>";
         }
         res.send(HTMLResponce);
