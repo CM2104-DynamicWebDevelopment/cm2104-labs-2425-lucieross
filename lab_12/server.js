@@ -4,6 +4,10 @@ var SpotifyWebAPI = require('spotify-web-api-node');
 app.use(express.static('public'));
 app.use(express.urlencoded({extended:true}));
 
+app.get('/', function(req, res){ //default shown
+    res.send("Hello world! by express");
+});
+
 var spotifyAPI = new SpotifyWebAPI({
     clientId: '7c9ea5ba3f3242408bdee87a90f83a0a',
     clientSecret: '75701a2b46fa4ffcaf93209a6223e7a5'
