@@ -23,19 +23,21 @@ spotifyAPI.clientCredentialsGrant().then(
         err.message
         );
 
-    },
-
-    async function getTracks(searchterm, res) {  
-        spotifyAPI.searchTracks(searchterm)
-        .then (function (data){
-            res.send(JSON.stringify(data.body));
-        }, function (err){
-            console.error(err);
-        });
     }
 );
+
+async function getTracks(searchterm, res) {  
+    spotifyAPI.searchTracks(searchterm)
+    .then (function (data){
+        res.send(JSON.stringify(data.body));
+    }, function (err){
+        console.error(err);
+    });
+}
 
 
 app.get('/searchLove', function (req,res){
     getTracks('love', res);
 });
+
+app.listen(8080);
