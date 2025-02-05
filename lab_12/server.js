@@ -40,7 +40,7 @@ async function getTracks(searchterm, res) {
                 "<h2>" + track.name+"</h2>" +
                 "<h4>" + track.artists[0].name+"</h4>"+
                 "<img src = '"+ track.album.images[0].url+"'>"+
-                "<div>" + 
+                "<div>" + //added div for formatting better
                     "<a href='" + track.external_urls.spotify + "'>Track details</a>" +
                 "</div>" +
             "</div>";
@@ -56,5 +56,10 @@ async function getTracks(searchterm, res) {
 app.get('/searchLove', function (req,res){
     getTracks('love', res);
 });
+
+app.get('/search', function(req, res){
+    var searchterm = req.query.searchterm;
+    getTracks(searchterm, res);
+})
 
 app.listen(8080);
