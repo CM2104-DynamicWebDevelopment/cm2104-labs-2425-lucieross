@@ -50,7 +50,6 @@ async function getTracks(searchterm, res) {
                     "<a href='/artistTopTracks/" + track.artists[0].id + "'>Get Top Tracks</a>" +
                 "</div>" +
             "</div>";
-            console.log(HTMLResponce);
         }
         res.send(HTMLResponce);
     }, function (err){
@@ -58,14 +57,35 @@ async function getTracks(searchterm, res) {
     });
 }
 
-async function getTopTracks(artist, res) { //gets artists top tracks
-    spotifyAPI.getArtistTopTracks(artist,'GB')
+async function getTopTracks(artistId, res) { 
+    spotifyAPI.getArtistTopTracks(artistId, 'GB')
         .then(function (data) {
-            console.log(data.body);
+            var topTracks = data.body.tracks;
+            var HTMLResponse = "<h2>Top Tracks</h2>";
+
+            if (topTracks && topTracks.length > 0) { 
+                for (var i = 0; i < topTracks.length; i++) {
+                    var track = topTracks[i];
+                    HTMLResponse += 
+                        "<div>" +
+                            "<h3>" + track.name + "</h3>" +
+                            "<h4>" + track.artists[0].name + "</h4>" +
+                            "<img src='" + track.album.images[0].url + "'>" +
+                            "<div>" +
+                                "<a href='" + track.external_urls.spotify + "'>Track details</a>" +
+                            "</div>" +
+                        "</div>";
+                }
+            } else {
+                HTMLResponse += "<p>No top tracks found for this artist.</p>";
+            }
+
+            res.send(HTMLResponse); 
         }, function (err) {
-            console.log('Something went wrong!', err);
-    });
+            console.log('Something went wrong while fetching top tracks!', err);
+        });
 }
+
 
 
 app.get('/searchLove', function (req,res){
