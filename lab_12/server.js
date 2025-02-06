@@ -93,9 +93,10 @@ async function getTopTracks(artistId, res) {
 }
 
 async function getRelated(artistId, res) {
-    spotifyAPI.getArtistRelatedArtists(artistId)
+    spotifyAPI.getArtistRelatedArtists(artistId)  
     .then(function (data) {
-        console.log(data.body);  
+        console.log('Related Artists:', data.body);  
+
         var relatedArtists = data.body.artists; 
         var HTMLResponse = "";
 
@@ -104,7 +105,7 @@ async function getRelated(artistId, res) {
                 HTMLResponse += 
                     "<div>" +
                         "<h3>" + artist.name + "</h3>" +
-                        "<img src='" + artist.images[0]?.url + "' alt='" + artist.name + "'>" +  // Image URL
+                        "<img src='" + artist.images[0]?.url + "' alt='" + artist.name + "'>" +
                         "<a href='" + artist.external_urls.spotify + "'>Visit on Spotify</a>" +
                     "</div>";
             });
@@ -115,10 +116,10 @@ async function getRelated(artistId, res) {
         res.send(HTMLResponse);  
     })
     .catch(function (err) {
-        console.log('Something went wrong!', err);
-        res.status(500).send('Error fetching related artists');
+        console.error('Error:', err);
     });
 }
+
 
 
 async function getTracksAPI(searchterm, res) { //https://pantherdallas-tribunechris-8080.codio.io/search?searchterm=helps
@@ -162,8 +163,5 @@ app.get('/related-artists/:artistId', function (req, res) {
     var artistId = req.params.artistId;
     getRelated(artistId, res);
 });
-
-
-
 
 app.listen(8080);
