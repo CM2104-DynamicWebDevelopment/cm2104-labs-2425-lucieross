@@ -51,6 +51,9 @@ async function getTracks(searchterm, res) {
                 "</div>" + //formatting
                 "<a href='/artistTopTracks/" + track.artists[0].id + "'>Get Top Tracks</a>" +
                 "</div>" + 
+                "</div>" + //formatting
+                "<a href='/artists/" + track.artists[0].id + "/related-artists' >Get Top Tracks</a>" +
+                "</div>" + 
             "</div>";
         }
         res.send(HTMLResponce);
