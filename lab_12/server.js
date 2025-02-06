@@ -92,9 +92,9 @@ async function getTopTracks(artistId, res) {
         });
 }
 
-async function getRelated(artistId, res){
+async function getRelated(artistId, res) {
     spotifyAPI.getArtistRelatedArtists(artistId)
-        .then(function (data){
+        .then(function (data) {
             var relatedArtists = data.body.artists;
             var HTMLResponse = "";
 
@@ -105,7 +105,7 @@ async function getRelated(artistId, res){
                         "<div>" +
                             "<h2>Related Artists</h2>" +
                             "<h3>" + artist.name + "</h3>" +
-                            "<img src='" + artist.images[0]?.url + "' alt='" + artist.name + "' style='width: 100px; height: 100px;'>" +
+                            "<img src='" + artist.images[0]?.url + "' alt='" + artist.name + "'>" +
                             "<div>" +
                                 "<a href='" + artist.external_urls.spotify + "'>Artist details</a>" +
                             "</div>" +
@@ -116,10 +116,11 @@ async function getRelated(artistId, res){
             }
 
             res.send(HTMLResponse);
-        }, function (err){
+        }, function (err) {
             console.log('Something went wrong while fetching related artists!', err);
         });
 }
+
 
 
 
