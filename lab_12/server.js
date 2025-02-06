@@ -89,10 +89,12 @@ async function getRelated(artistId, res) {
         if (relatedArtists && relatedArtists.length > 0) {
             for (var i = 0; i < relatedArtists.length; i++) {
                 var artist = relatedArtists[i];
+                var artistImageUrl = artist.images.length > 0 ? artist.images[0].url : '/path/to/default-image.jpg';
+
                 HTMLResponse += 
                     "<div>" +
                         "<h3>" + artist.name + "</h3>" +
-                        "<img src='" + artist.images[0].url + "'>" +
+                        "<img src='" + artistImageUrl + "'>" +
                         "<div>" +
                             "<a href='/artistTopTracks/" + artist.id + "'>Get Top Tracks</a>" +
                         "</div>" +
@@ -105,8 +107,10 @@ async function getRelated(artistId, res) {
         res.send(HTMLResponse);
     }, function (err) {
         console.log('Something went wrong while fetching related artists!', err);
+        res.send("<p>Error fetching related artists.</p>");
     });
 }
+
 
 app.get('/searchLove', function (req,res){
     getTracks('love', res);
