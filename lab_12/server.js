@@ -137,7 +137,7 @@ app.get('/artistTopTracks/:artistId', function (req, res){ //gets artist ID
     getTopTracks(artistId,res); //shows top tracks
 })
 
-app.get('/ArtistRelatedArtists/:artistId', function (req, res){
+app.get('/ArtistRelatedArtists/:artist', function (req, res){
     var artistId = req.params.artistId;
     getRelated (artistId, res);
 })
