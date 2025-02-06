@@ -51,6 +51,9 @@ async function getTracks(searchterm, res) {
                 "</div>" + //formatting
                 "<a href='/artistTopTracks/" + track.artists[0].id + "'>Get Top Tracks</a>" +
                 "</div>" + 
+                "</div>" + //formatting
+                "<a href='/ArtistRelatedArtists/" + track.artists[0].id + "'>Get Related Artists</a>" +
+                "</div>" + 
             "</div>";
         }
         res.send(HTMLResponce);
@@ -63,13 +66,14 @@ async function getTopTracks(artistId, res) {
     spotifyAPI.getArtistTopTracks(artistId, 'GB')
         .then(function (data) {
             var topTracks = data.body.tracks;
-            var HTMLResponse = "<h2>Top Tracks</h2>";
+            var HTMLResponse = "";
 
             if (topTracks && topTracks.length > 0) { 
                 for (var i = 0; i < topTracks.length; i++) {
                     var track = topTracks[i];
                     HTMLResponse += 
                         "<div>" +
+                            "<h2>  Top Tracks </h2> "+ 
                             "<h3>" + track.name + "</h3>" +
                             "<h4>" + track.artists[0].name + "</h4>" +
                             "<img src='" + track.album.images[0].url + "'>" +
@@ -88,6 +92,15 @@ async function getTopTracks(artistId, res) {
         });
 }
 
+async function getRelated(artist, res){
+    spotifyAPI.getArtistRelatedArtists(artist)
+        .then (function (data){
+            console.log(data.body);
+        }, function (err){
+            console.log('something went wrong!', err);
+        })
+}
+
 
 
 app.get('/searchLove', function (req,res){
@@ -102,6 +115,11 @@ app.get('/search', function(req, res){ //https://pantherdallas-tribunechris-8080
 app.get('/artistTopTracks/:artistId', function (req, res){ //gets artist ID
     var artistId = req.params.artistId;
     getTopTracks(artistId,res); //shows top tracks
+})
+
+app.get('/ArtistRelatedArtists/:artistId', function (req, res){
+    var artistId = req.params.artistId;
+    getRelated (artistId, res);
 })
 
 app.listen(8080);
