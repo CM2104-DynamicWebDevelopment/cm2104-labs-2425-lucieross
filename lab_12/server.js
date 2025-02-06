@@ -101,6 +101,29 @@ async function getRelated(artist, res) {
     })
 }
 
+async function getTracksAPI(searchterm, res) {
+    spotifyAPI.searchTracks(searchterm)
+    .then(function (data){
+        var tracks = data.body.tracks.items
+        var JSONResponse = [];
+
+        for(var i = 0; i<tracks.length; i++){
+            var track = track[i];
+            JSONResponse.push(
+            {
+                trackname:track.name,
+                artist: track.artists[0].name,
+                image: track.album.images[0].url,
+                url:track.external_urls.spotify,
+            }
+            );
+        }
+        res.send(JSONResponse)
+    }, function (err){
+        console.log(err);
+    });
+}
+
 app.get('/searchLove', function (req,res){
     getTracks('love', res);
 });
