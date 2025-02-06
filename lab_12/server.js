@@ -51,9 +51,8 @@ async function getTracks(searchterm, res) {
                 "</div>" + //formatting
                 "<a href='/artistTopTracks/" + track.artists[0].id + "'>Get Top Tracks</a>" +
                 "</div>" + 
-
                 "</div>" + //formatting
-                "<a href='/artists/" + track.artists[0].id + "/related-artists" + '>Get Top Tracks</a>' +
+                "<a href='/artists/" + track.artists[0].id + "/related-artists" + '>Get Related Artists</a>' +
                 "</div>" + 
             "</div>";
         }
@@ -117,8 +116,8 @@ app.get('/artistTopTracks/:artistId', function (req, res){ //gets artist ID
 })
 
 app.get('/artists/:artistId/related-artists'), function (req, res){
-    var artist = req.params.artistId;
-    getRelated(artist,res); 
+    var artistId = req.params.artistId;
+    getRelated(artistId,res); 
 }
 
 
