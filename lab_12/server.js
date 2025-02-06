@@ -89,6 +89,14 @@ async function getTopTracks(artistId, res) {
         });
 }
 
+async function getRelated(artist, res) {
+    spotifyAPI.getArtistRelatedArtists(artist)
+    .then(function (data) {
+        console.log(data.body);
+    }, function (err){
+        console.log('something went wrong!', err);
+    })
+}
 
 app.get('/searchLove', function (req,res){
     getTracks('love', res);
@@ -103,6 +111,11 @@ app.get('/artistTopTracks/:artistId', function (req, res){ //gets artist ID
     var artistId = req.params.artistId;
     getTopTracks(artistId,res); //shows top tracks
 })
+
+app.get('/artists/:artistId/related-artists'), function (req, res){
+    var artist = req.params.artistId;
+    getRelated(artist,res); 
+}
 
 
 
