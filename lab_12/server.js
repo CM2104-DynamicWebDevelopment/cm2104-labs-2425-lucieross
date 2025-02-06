@@ -52,7 +52,7 @@ async function getTracks(searchterm, res) {
                 "<a href='/artistTopTracks/" + track.artists[0].id + "'>Get Top Tracks</a>" +
                 "</div>" + 
                 "</div>" + //formatting
-                "<a href='/related-artists/" + track.artists[0].id + " >Get Top Tracks</a>" +
+                "<a href='/related-artists/" + track.artists[0].id + "' >Get Related Artists</a>" +
                 "</div>" + 
             "</div>";
         }
