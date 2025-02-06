@@ -51,9 +51,6 @@ async function getTracks(searchterm, res) {
                 "</div>" + //formatting
                 "<a href='/artistTopTracks/" + track.artists[0].id + "'>Get Top Tracks</a>" +
                 "</div>" + 
-                "</div>" + //formatting
-                "<a href='/ArtistRelatedArtists/" + track.artists[0].id + "'>Get Related Artists</a>" +
-                "</div>" + 
             "</div>";
         }
         res.send(HTMLResponce);
@@ -92,37 +89,6 @@ async function getTopTracks(artistId, res) {
         });
 }
 
-async function getRelated(artistId, res) {
-    spotifyAPI.getArtistRelatedArtists(artistId)
-        .then(function (data) {
-            var relatedArtists = data.body.artists;
-            var HTMLResponse = "";
-
-            if (relatedArtists && relatedArtists.length > 0) {
-                for (var i = 0; i < relatedArtists.length; i++) {
-                    var artist = relatedArtists[i];
-                    HTMLResponse +=
-                        "<div>" +
-                            "<h2>Related Artists</h2>" +
-                            "<h3>" + artist.name + "</h3>" +
-                            "<img src='" + artist.images[0]?.url + "' alt='" + artist.name + "'>" +
-                            "<div>" +
-                                "<a href='" + artist.external_urls.spotify + "'>Artist details</a>" +
-                            "</div>" +
-                        "</div>";
-                }
-            } else {
-                HTMLResponse += "<p>No related artists found.</p>";
-            }
-
-            res.send(HTMLResponse);
-        }, function (err) {
-            console.log('Something went wrong while fetching related artists!', err);
-        });
-}
-
-
-
 
 app.get('/searchLove', function (req,res){
     getTracks('love', res);
@@ -138,10 +104,7 @@ app.get('/artistTopTracks/:artistId', function (req, res){ //gets artist ID
     getTopTracks(artistId,res); //shows top tracks
 })
 
-app.get('/ArtistRelatedArtists/:artistId', function (req, res) {
-    var artistId = req.params.artistId; 
-    getRelated(artistId, res);
-})
+
 
 
 app.listen(8080);
