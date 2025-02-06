@@ -130,7 +130,7 @@ app.get('/searchLove', function (req,res){
 
 app.get('/search', function(req, res){ //https://pantherdallas-tribunechris-8080.codio.io/form.html
     var searchterm = req.query.searchterm;
-    getTracks(searchterm, res);
+    getTracksAPI(searchterm, res);
 })
 
 app.get('/artistTopTracks/:artistId', function (req, res){ //gets artist ID
