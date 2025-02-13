@@ -73,3 +73,13 @@ app.post('/delete', function(req, res) {
         res.redirect('/');
     });
 });
+
+app.post('/update', function(req, res){
+    var query = { quote: req.body.quote};
+    var newvalues = {$set: {name: req.body.newname, quote: res.body.newquote}};
+
+    db.collection('quotes').updateOne(query,newvalues, function(err, result){
+        if (err) throw err;
+        res.redirect('/');
+    });
+});
