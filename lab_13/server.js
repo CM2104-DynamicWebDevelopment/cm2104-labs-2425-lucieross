@@ -66,3 +66,10 @@ app.post('/search', function(req, res) { //searchs specific quotes
         res.send(output);
     });
 });
+
+app.post('/delete', function(req, res){ //delete a quote
+    db.collection('quotes').deleteOne(req.body, function(err, result){
+        if (err) throw err;
+        res.redirect('/');
+    })
+})
