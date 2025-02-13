@@ -74,7 +74,7 @@ app.post('/delete', function(req, res) { //delete quotes method
     });
 });
 
-app.post('/update', function(req, res) {
+app.post('/update', function(req, res) { //update quotes function
     var query = { quote: req.body.quote };
     var newvalues = { $set: {name: req.body.newname, quote: req.body.newquote } };
 
