@@ -62,6 +62,13 @@ app.get('/update', function(req,res) {
   res.render('pages/update')
 });
 
+app.post('/delete', function(req, res) { //delete quotes method
+  db.collection('quotes').deleteOne(req.body, function(err, result) {
+      if (err) throw err;
+      res.redirect('/');
+  });
+});
+
 
 
 app.get('/allquotes', function(req, res) {
