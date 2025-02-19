@@ -42,17 +42,21 @@ async function connectDB() {
 app.get('/', function(req,res) {
   res.render('pages/index')
 });
+
 app.get('/add', function(req,res) {
-
+  res.render('pages/add')
 });
+
 app.get('/delete', function(req,res) {
-
+  res.render('pages/delete')
 });
+
 app.get('/filter', function(req,res) {
-
+  res.render('pages/filter')
 });
-app.get('/update', function(req,res) {
 
+app.get('/update', function(req,res) {
+  res.render('pages/update')
 });
 
 
