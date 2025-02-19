@@ -69,6 +69,39 @@ app.post('/delete', function(req, res) { //delete quotes method
   });
 });
 
+app.post('/quotes', function (req, res) { //adds quotes tab
+  db.collection('quotes').insertOne(req.body, function(err, result) {
+      if (err) throw err;
+      console.log('saved to database')
+      res.redirect('/')
+  })
+})
+
+app.post('/search', function(req, res) { //searchs specific quotes
+  db.collection('quotes').find(req.body).toArray(function(err, result) { //res body is what is submitted in the form
+      if (err) throw err;
+
+      var output = "<h1>All the quotes</h1>";
+
+      for (var i = 0; i < result.length; i++) {
+          output += "<div>"
+          output += "<h3>" + result[i].name + "</h3>"
+          output += "<p>" + result[i].quote + "</p>"
+          output += "</div>"
+      }
+      res.send(output);
+  });
+});
+
+app.post('/update', function(req, res) { //update quotes function
+  var query = { quote: req.body.quote };
+  var newvalues = { $set: {name: req.body.newname, quote: req.body.newquote } };
+
+  db.collection('quotes').updateOne(query,newvalues, function(err, result) {
+      if (err) throw err;
+      res.redirect('/');
+  });
+});
 
 
 app.get('/allquotes', function(req, res) {
