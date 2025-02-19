@@ -8,9 +8,14 @@ app.set('views', path.join(__dirname, 'views'));
 // Set view engine to ejs
 app.set('view engine', 'ejs');
 
-// Example route
+// index route
 app.get('/', (req, res) => {
   res.render('pages/index');
+});
+
+// about page
+app.get('/about', function(req, res) {
+    res.render('pages/about');
 });
 
 app.listen(8080);
