@@ -77,21 +77,19 @@ app.post('/quotes', function (req, res) { //adds quotes tab
   })
 })
 
-app.post('/search', function(req, res) { //searchs specific quotes
-  db.collection('quotes').find(req.body).toArray(function(err, result) { //res body is what is submitted in the form
-      if (err) throw err;
+app.post('/search', function(req, res) {
+  // Get the search criteria (name) from the form submission
+  const searchName = req.body.name;
 
-      var output = "<h1>All the quotes</h1>";
+  // Find the quotes matching the name
+  db.collection('quotes').find({ name: { $regex: searchName, $options: 'i' } }).toArray(function(err, result) {
+    if (err) throw err;
 
-      for (var i = 0; i < result.length; i++) {
-          output += "<div>"
-          output += "<h3>" + result[i].name + "</h3>"
-          output += "<p>" + result[i].quote + "</p>"
-          output += "</div>"
-      }
-      res.send(output);
+    // Render the index page with the search results
+    res.render('pages/index', { quotes: result, searchName: searchName });
   });
 });
+
 
 app.post('/update', function(req, res) { //update quotes function
   var query = { quote: req.body.quote };
@@ -119,42 +117,3 @@ app.get('/allquotes', function(req, res) {
   });
 });
 
-app.post('/quotes', function (req, res) {
-  db.collection('quotes').save(req.body, function(err, result) {
-    if (err) throw err;
-    console.log('saved to database')
-    res.redirect('/')
-  })
-})
-
-app.post('/search', function(req, res) {
-  db.collection('quotes').find(req.body).toArray(function(err, result) {
-    if (err) throw err;
-
-    var output = "<h1>quotes by" +req.body.name+ "</h1>";
-
-    for (var i = 0; i < result.length; i++) {
-      output += "<div>"
-      output += "<h3>" + result[i].name + "</h3>"
-      output += "<p>" + result[i].quote + "</p>"
-      output += "</div>"
-    }
-    res.send(output);
-  });
-});
-
-app.post('/delete', function(req, res) {
-  db.collection('quotes').deleteOne(req.body, function(err, result) {
-    if (err) throw err;
-    res.redirect('/');
-  });
-});
-
-app.post('/update', function(req, res) {
-  var query = { quote: req.body.quote };
-  var newvalues = { $set: {name: req.body.newname, quote: req.body.newquote } };
-  db.collection('quotes').updateOne(query,newvalues, function(err, result) {
-    if (err) throw err;
-    res.redirect('/');
-  });
-});
