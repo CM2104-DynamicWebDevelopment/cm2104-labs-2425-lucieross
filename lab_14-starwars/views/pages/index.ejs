@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include('../partials/head') %>
+</head>
+
+<body class="container">
+  <header>
+    <%- include('../partials/header') %>
+  </header>
+
+  <main>
+    <div class="jumbotron">
+      <% if (quotes && quotes.length > 0) { %>
+        <h2>Quotes!</h2>
+        <% quotes.forEach(function(quote) { %>
+          <div>
+            <h3><%= quote.name %></h3>
+            <p><%= quote.quote %></p>
+          </div>
+        <% }) %>
+      <% } else if (searchName) { %>
+        <p>No quotes found for "<%= searchName %>".</p>
+      <% } else { %>
+        <p>No quotes available.</p>
+      <% } %>
+
+    </div>
+  </main>
+
+</body>
+
+<footer>
+  <%- include('../partials/footer') %>
+</footer>
+
+</html>
