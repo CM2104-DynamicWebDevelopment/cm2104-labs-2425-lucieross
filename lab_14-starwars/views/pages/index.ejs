@@ -15,14 +15,16 @@
     <div class="jumbotron">
 
       <h2>Quotes!</h2>
+      <% quotes.forEach(function(quote) { %>
+        <div>
+          <h3><%= quote.name %></h3>
+          <p><%= quote.quote %></p>
+        </div>
+      <% }) %>
+    
 
     </div>
   </main>
-
-
-  <footer>
-    <p class="text-center text-muted">© Copyright 2018 Some People</p>
-  </footer>
 
 </body>
 
