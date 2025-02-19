@@ -5,6 +5,9 @@ var app = express();
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
+const path = require('path');
+app.set('views', path.join(__dirname, 'views'));  
+
 
 // use res.render to load up an ejs view file
 
