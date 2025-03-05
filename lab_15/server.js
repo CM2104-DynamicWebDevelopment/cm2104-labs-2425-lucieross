@@ -183,8 +183,6 @@ app.post('/doupdate', function(req, res) {
 
   // Get the updated details from the form
   const updatedDetails = {
-    "username": req.body.username,
-    "password": req.body.password,
     "gender": req.body.gender,
     "name": {
       "title": req.body.title,
