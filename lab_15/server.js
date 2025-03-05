@@ -113,10 +113,6 @@ app.get('/logout', function(req, res) {
   res.redirect('/');
 });
 
-app.get('/update', (req, res) => {
-  if(!req.session.loggedin){res.redirect('/login');return;}
-  res.render('pages/update'); // or whatever you need to render
-});
 
 
 
@@ -168,8 +164,8 @@ app.post('/delete', function(req, res) {
   });
 });
 
-app.get('/updateuser', function(req, res) {
-
+app.get('/update', (req, res) => {
+  if(!req.session.loggedin){res.redirect('/login');return;}
   // Get user name
   const loggedInUser = req.session.user;
 
@@ -178,6 +174,8 @@ app.get('/updateuser', function(req, res) {
     user: loggedInUser  // Pass the data to the template
   });
 });
+
+
 
 app.post('/doupdate', function(req, res) {
   // Get user name
