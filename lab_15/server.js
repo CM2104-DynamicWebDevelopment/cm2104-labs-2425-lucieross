@@ -60,9 +60,14 @@ app.get('/', function(req, res) {
   //otherwise perfrom a search to return all the documents in the people collection
   db.collection('people').find().toArray(function(err, result) {
     if (err) throw err;
+
+    //gets the logged in user
+    const loggedInUser = req.session.loggedin ? req.session.user : null;
+
     //the result of the query is sent to the users page as the "users" array
     res.render('pages/users', {
-      users: result
+      users: result,
+      loggedInUser: loggedInUser //logged in user
     })
   });
 
