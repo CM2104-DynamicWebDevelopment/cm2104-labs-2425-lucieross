@@ -115,7 +115,7 @@ app.get('/logout', function(req, res) {
 
 app.get('/update', (req, res) => {
   if(!req.session.loggedin){res.redirect('/login');return;}
-  res.render('update'); // or whatever you need to render
+  res.render('pages/update'); // or whatever you need to render
 });
 
 
