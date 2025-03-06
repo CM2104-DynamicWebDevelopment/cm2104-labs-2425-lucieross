@@ -133,13 +133,11 @@ app.get('/updateuser', function (req, res) {
 
 // Route to display the user's profile
 app.get('/profile', function (req, res) {
-  // Ensure the user is logged in
   if (!req.session.loggedin) {
     res.redirect('/login');
     return;
   }
-
-  // Get the username from the query parameter
+  // Get the username
   var username = req.query.username;
 
   // Find the user based on the username
@@ -281,7 +279,7 @@ app.post('/adduser', function (req, res) {
   })
 });
 
-// Route to handle the update form submission
+
 // Route to handle the update form submission
 app.post('/doupdate', function (req, res) {
   // Check if the user is logged in
@@ -318,14 +316,14 @@ app.post('/doupdate', function (req, res) {
     "nat": req.body.nat
   };
 
-  // Update the user's details in the database
+  // Updates user's details in the database
   db.collection('people').updateOne(
-    { "login.username": req.body.username }, // Search condition
+    { "login.username": req.body.username }, 
     { $set: updatedData }, // Data to update
     function (err, result) {
       if (err) throw err;
       console.log('User updated successfully');
-      res.redirect('/profile?username=' + req.body.username); // Redirect to the updated profile page
+      res.redirect('/profile?username=' + req.body.username); // Redirect to the updated profile page with new data
     }
   );
 });
