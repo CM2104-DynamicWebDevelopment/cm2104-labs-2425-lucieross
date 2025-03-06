@@ -138,13 +138,19 @@ app.get('/update', function (req, res) {
     res.redirect('/login');
     return;
   }
-  const loggedInUser = req.session.user;
+
+  const loggedInUser = req.session.currentUser;  
+
+  console.log('Logged-in user:', loggedInUser);
 
   // Renders form and passes the details
   res.render('pages/update', {
-    user: loggedInUser  // Pass the data to the template
+    user: loggedInUser  
   });
 });
+
+
+
 
 
 
@@ -159,31 +165,26 @@ app.post('/dologin', function (req, res) {
   var uname = req.body.username;
   var pword = req.body.password;
 
-
-
   db.collection('people').findOne({
     "login.username": uname
   }, function (err, result) {
     if (err) throw err;
 
-
     if (!result) {
       res.redirect('/login');
-      return
+      return;
     }
 
-
-
     if (result.login.password == pword) {
-
       req.session.loggedin = true;
-      req.session.currentuser = uname;
-      res.redirect('/')
+      req.session.currentUser = result; 
+      res.redirect('/');
     } else {
-      res.redirect('/login')
+      res.redirect('/login');
     }
   });
 });
+
 
 //the delete route deals with user deletion based on entering a username
 app.post('/delete', function (req, res) {
@@ -273,9 +274,8 @@ app.post('/doupdate', function(req, res) {
     return;
   }
 
-  const uname = req.session.currentuser; 
+  const uname = req.session.currentUser.login.username;  // Access currentUser for the username
 
-  // Get the updated details from the form
   const updatedDetails = {
     "gender": req.body.gender,
     "name": {
@@ -292,18 +292,21 @@ app.post('/doupdate', function(req, res) {
     }
   };
 
-  // Update the user details in MongoDB
   db.collection('people').updateOne(
     { "login.username": uname }, // Find the user by username
     { $set: updatedDetails }, // Update the user details with new ones
     function(err, result) {
-      if (err) throw err;
+      if (err) {
+        console.error('Error updating user:', err);
+        return res.status(500).send('Error updating user.');
+      }
 
-      // Update the session user object with the new details
-      req.session.user = { ...req.session.user, ...updatedDetails };
+      // Update the session with the new user data
+      req.session.currentUser = { ...req.session.currentUser, ...updatedDetails };
 
       // Redirect to the user's profile page
       res.redirect('/profile?username=' + uname);  
     }
   );
 });
+
