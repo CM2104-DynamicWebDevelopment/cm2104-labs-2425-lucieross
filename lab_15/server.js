@@ -53,37 +53,54 @@ async function connectDB() {
 //********** GET ROUTES - Deal with displaying pages ***************************
 
 //this is our root route
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
   //if the user is not logged in redirect them to the login page
-  if(!req.session.loggedin){res.redirect('/login');return;}
+  if (!req.session.loggedin) {
+    res.redirect('/login');
+    return;
+  }
+
+
+  var currentuser = req.session.currentuser;
+
 
   //otherwise perfrom a search to return all the documents in the people collection
-  db.collection('people').find().toArray(function(err, result) {
+  db.collection('people').find().toArray(function (err, result) {
     if (err) throw err;
     //the result of the query is sent to the users page as the "users" array
-    res.render('pages/users', {
-      users: result
-    })
+    db.collection('people').findOne({"login.username": currentuser}, function (err, userresult) {
+      if (err) throw err;
+
+      res.render('pages/users', {
+        users: result,
+        user: userresult
+      })
+    });
   });
 
 });
 
 //this is our login route, all it does is render the login.ejs page.
-app.get('/login', function(req, res) {
+app.get('/login', function (req, res) {
   res.render('pages/login');
 });
 
 
-app.get('/profile', function(req, res) {
-  if(!req.session.loggedin){res.redirect('/login');return;}
-  
-  
+app.get('/profile', function (req, res) {
+  if (!req.session.loggedin) {
+    res.redirect('/login');
+    return;
+  }
+
+
   var uname = req.query.username;
-  
- 
-  db.collection('people').findOne({"login.username": uname}, function(err, result) {
+
+
+  db.collection('people').findOne({
+    "login.username": uname
+  }, function (err, result) {
     if (err) throw err;
-   
+
 
 
     res.render('pages/profile', {
@@ -93,18 +110,24 @@ app.get('/profile', function(req, res) {
 
 });
 //adduser route simply draws our adduser page
-app.get('/adduser', function(req, res) {
-  if(!req.session.loggedin){res.redirect('/login');return;}
+app.get('/adduser', function (req, res) {
+  if (!req.session.loggedin) {
+    res.redirect('/login');
+    return;
+  }
   res.render('pages/adduser')
 });
 //remuser route simply draws our remuser page
-app.get('/remuser', function(req, res) {
-  if(!req.session.loggedin){res.redirect('/login');return;}
+app.get('/remuser', function (req, res) {
+  if (!req.session.loggedin) {
+    res.redirect('/login');
+    return;
+  }
   res.render('pages/remuser')
 });
 //logour route cause the page to Logout.
 //it sets our session.loggedin to false and then redirects the user to the login
-app.get('/logout', function(req, res) {
+app.get('/logout', function (req, res) {
   req.session.loggedin = false;
   req.session.destroy();
   res.redirect('/');
@@ -118,38 +141,51 @@ app.get('/logout', function(req, res) {
 
 //the dologin route detasl with the data from the login screen.
 //the post variables, username and password ceom from the form on the login page.
-app.post('/dologin', function(req, res) {
+app.post('/dologin', function (req, res) {
   console.log(JSON.stringify(req.body))
   var uname = req.body.username;
   var pword = req.body.password;
 
 
 
-  db.collection('people').findOne({"login.username":uname}, function(err, result) {
+  db.collection('people').findOne({
+    "login.username": uname
+  }, function (err, result) {
     if (err) throw err;
 
 
-    if(!result){res.redirect('/login');return}
+    if (!result) {
+      res.redirect('/login');
+      return
+    }
 
 
 
-    if(result.login.password == pword){ req.session.loggedin = true; res.redirect('/') }
+    if (result.login.password == pword) {
 
-
-
-    else{res.redirect('/login')}
+      req.session.loggedin = true;
+      req.session.currentuser = uname;
+      res.redirect('/')
+    } else {
+      res.redirect('/login')
+    }
   });
 });
 
 //the delete route deals with user deletion based on entering a username
-app.post('/delete', function(req, res) {
+app.post('/delete', function (req, res) {
   //check we are logged in.
-  if(!req.session.loggedin){res.redirect('/login');return;}
+  if (!req.session.loggedin) {
+    res.redirect('/login');
+    return;
+  }
   //if so get the username variable
   var uname = req.body.username;
 
   //check for the username added in the form, if one exists then you can delete that doccument
-  db.collection('people').deleteOne({"login.username":uname}, function(err, result) {
+  db.collection('people').deleteOne({
+    "login.username": uname
+  }, function (err, result) {
     if (err) throw err;
     //when complete redirect to the index
     res.redirect('/');
@@ -170,25 +206,46 @@ app.post('/delete', function(req, res) {
 //"picture":{"large":"https://randomuser.me/api/portraits/women/42.jpg","medium":"https://randomuser.me/api/portraits/med/women/42.jpg","thumbnail":"https://randomuser.me/api/portraits/thumb/women/42.jpg"},
 //"nat":"GB"}
 
-app.post('/adduser', function(req, res) {
+app.post('/adduser', function (req, res) {
   //check we are logged in
-  if(!req.session.loggedin){res.redirect('/login');return;}
+  if (!req.session.loggedin) {
+    res.redirect('/login');
+    return;
+  }
 
   //we create the data string from the form components that have been passed in
 
-var datatostore = {
-"gender":req.body.gender,
-"name":{"title":req.body.title,"first":req.body.first,"last":req.body.last},
-"location":{"street":req.body.street,"city":req.body.city,"state":req.body.state,"postcode":req.body.postcode},
-"email":req.body.email,
-"login":{"username":req.body.username,"password":req.body.password},
-"dob":req.body.dob,"registered":Date(),
-"picture":{"large":req.body.large,"medium":req.body.medium,"thumbnail":req.body.thumbnail},
-"nat":req.body.nat}
+  var datatostore = {
+    "gender": req.body.gender,
+    "name": {
+      "title": req.body.title,
+      "first": req.body.first,
+      "last": req.body.last
+    },
+    "location": {
+      "street": req.body.street,
+      "city": req.body.city,
+      "state": req.body.state,
+      "postcode": req.body.postcode
+    },
+    "email": req.body.email,
+    "login": {
+      "username": req.body.username,
+      "password": req.body.password
+    },
+    "dob": req.body.dob,
+    "registered": Date(),
+    "picture": {
+      "large": req.body.large,
+      "medium": req.body.medium,
+      "thumbnail": req.body.thumbnail
+    },
+    "nat": req.body.nat
+  }
 
 
-//once created we just run the data string against the database and all our new data will be saved/
-  db.collection('people').insertOne(datatostore, function(err, result) {
+  //once created we just run the data string against the database and all our new data will be saved/
+  db.collection('people').save(datatostore, function (err, result) {
     if (err) throw err;
     console.log('saved to database')
     //when complete redirect to the index
