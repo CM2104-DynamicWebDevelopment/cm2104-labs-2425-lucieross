@@ -67,9 +67,6 @@ app.get('/', function(req, res) {
       users: result,
       loggedInUser: req.session.user
     })
-
-    console.log(users);
-    console.log(loggedInUser);
   });
 
 });
