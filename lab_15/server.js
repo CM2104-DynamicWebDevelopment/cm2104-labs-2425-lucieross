@@ -81,6 +81,7 @@ app.get('/profile', function(req, res) {
   if(!req.session.loggedin){res.redirect('/login');return;}
   
   
+  
   var uname = req.query.username;
   
  
