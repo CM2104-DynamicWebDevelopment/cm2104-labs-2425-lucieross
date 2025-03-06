@@ -131,6 +131,34 @@ app.get('/updateuser', function (req, res) {
   });
 });
 
+// Route to display the user's profile
+app.get('/profile', function (req, res) {
+  // Ensure the user is logged in
+  if (!req.session.loggedin) {
+    res.redirect('/login');
+    return;
+  }
+
+  // Get the username from the query parameter
+  var username = req.query.username;
+
+  // Find the user based on the username
+  db.collection('people').findOne({ "login.username": username }, function (err, userresult) {
+    if (err) throw err;
+
+    if (!userresult) {
+      res.send("User not found");
+      return;
+    }
+
+    // Render the profile page with the user's details
+    res.render('pages/profile', {
+      user: userresult
+    });
+  });
+});
+
+
 
 
 
