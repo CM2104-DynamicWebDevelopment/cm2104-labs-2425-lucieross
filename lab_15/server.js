@@ -86,25 +86,6 @@ app.get('/login', function (req, res) {
 });
 
 
-app.get('/updateuser', function (req, res) {
-  if (!req.session.loggedin) {
-    res.redirect('/login');
-    return;
-  }
-
-  var currentuser = req.session.currentuser;
-
-  // Fetch the current user's details from the database
-  db.collection('people').findOne({"login.username": currentuser}, function (err, userresult) {
-    if (err) throw err;
-
-    // Render the update page with the current user's details
-    res.render('pages/update', {
-      user: userresult
-    });
-  });
-});
-
 //adduser route simply draws our adduser page
 app.get('/adduser', function (req, res) {
   if (!req.session.loggedin) {
@@ -129,26 +110,6 @@ app.get('/logout', function (req, res) {
   res.redirect('/');
 });
 
-app.get('/profile', function (req, res) {
-  if (!req.session.loggedin) {
-    res.redirect('/login');  // If the user is not logged in, redirect to the login page
-    return;
-  }
-
-  var uname = req.query.username;  // Get the username from the query string
-
-  db.collection('people').findOne({
-    "login.username": uname  // Query the database for the user based on the username
-  }, function (err, result) {
-    if (err) throw err;
-
-    // Render the profile page with the user's details
-    res.render('pages/profile', {
-      user: result
-    });
-  });
-});
-
 
 // Route to render the update user page
 app.get('/updateuser', function (req, res) {
@@ -169,6 +130,7 @@ app.get('/updateuser', function (req, res) {
     });
   });
 });
+
 
 
 
@@ -292,12 +254,15 @@ app.post('/adduser', function (req, res) {
 });
 
 // Route to handle the update form submission
+// Route to handle the update form submission
 app.post('/doupdate', function (req, res) {
+  // Check if the user is logged in
   if (!req.session.loggedin) {
     res.redirect('/login');
     return;
   }
 
+  // Extract the updated data from the form
   var updatedData = {
     "gender": req.body.gender,
     "name": {
@@ -315,7 +280,14 @@ app.post('/doupdate', function (req, res) {
     "login": {
       "username": req.body.username,
       "password": req.body.password
-    }
+    },
+    "dob": req.body.dob,
+    "picture": {
+      "large": req.body.large,
+      "medium": req.body.medium,
+      "thumbnail": req.body.thumbnail
+    },
+    "nat": req.body.nat
   };
 
   // Update the user's details in the database
