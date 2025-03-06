@@ -178,10 +178,10 @@ app.get('/update', (req, res) => {
 
 
 app.post('/doupdate', function(req, res) {
-  // current username from session
+  // Get user name
   const uname = req.session.user.login.username;
 
-  // Get updated details from the form
+  // Get the updated details from the form
   const updatedDetails = {
     "username": req.body.username,
     "password": req.body.password,
@@ -191,7 +191,9 @@ app.post('/doupdate', function(req, res) {
       "first": req.body.first,
       "last": req.body.last
     },
+
     "email": req.body.email,
+
     "location": {
       "street": req.body.street,
       "city": req.body.city,
@@ -200,24 +202,19 @@ app.post('/doupdate', function(req, res) {
     }
   };
 
-  // Update the user details
+
+  // Update the user details in mongo
   db.collection('people').updateOne(
-    { "login.username": uname },  
-    { $set: updatedDetails },  // sets the updated details
+    { "login.username": uname }, // find the user
+    { $set: updatedDetails }, // update the user data with the new details
     function(err, result) {
+
       if (err) throw err;
 
-      req.session.user = {
-        ...req.session.user, 
-        ...updatedDetails 
-      };
-
-      
+      req.session.user = { ...req.session.user, ...updatedDetails }; // Update the session data so that they can see changes
       req.session.user.login.username = updatedDetails.username;
-      req.session.user.login.password = updatedDetails.password;
-
-      // redirects the user to their profile page
-      res.redirect('/profile?username=' + updatedDetails.username);
+    req.session.user.login.password = updatedDetails.password;
+      res.redirect('/profile?username=' + uname);  // Redirect to profile page
     }
   );
 });
