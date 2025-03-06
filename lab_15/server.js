@@ -138,7 +138,12 @@ app.get('/update', function (req, res) {
     res.redirect('/login');
     return;
   }
-  res.render('pages/update')
+  const loggedInUser = req.session.user;
+
+  // Renders form and passes the details
+  res.render('pages/update', {
+    user: loggedInUser  // Pass the data to the template
+  });
 });
 
 
@@ -259,4 +264,42 @@ app.post('/adduser', function (req, res) {
     //when complete redirect to the index
     res.redirect('/')
   })
+});
+
+//update
+app.post('/doupdate', function(req, res) {
+  // Get user name
+  const uname = req.session.user.login.username;
+
+  // Get the updated details from the form
+  const updatedDetails = {
+    "gender": req.body.gender,
+    "name": {
+      "title": req.body.title,
+      "first": req.body.first,
+      "last": req.body.last
+    },
+
+    "email": req.body.email,
+
+    "location": {
+      "street": req.body.street,
+      "city": req.body.city,
+      "state": req.body.state,
+      "postcode": req.body.postcode
+    }
+  };
+
+  // Update the user details in mongo
+  db.collection('people').updateOne(
+    { "login.username": uname }, // find the user
+    { $set: updatedDetails }, // update the user data with the new details
+    function(err, result) {
+
+      if (err) throw err;
+
+      req.session.user = { ...req.session.user, ...updatedDetails }; // Update the session data so that they can see changes
+      res.redirect('/profile?username=' + uname);  // Redirect to profile page
+    }
+  );
 });
