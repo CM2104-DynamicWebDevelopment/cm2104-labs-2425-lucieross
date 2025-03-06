@@ -133,6 +133,27 @@ app.get('/logout', function (req, res) {
   res.redirect('/');
 });
 
+// Route to render the update user page
+app.get('/updateuser', function (req, res) {
+  if (!req.session.loggedin) {
+    res.redirect('/login');
+    return;
+  }
+
+  var currentuser = req.session.currentuser;
+
+  // Fetch the current user's details from the database
+  db.collection('people').findOne({"login.username": currentuser}, function (err, userresult) {
+    if (err) throw err;
+
+    // Render the update page with the current user's details
+    res.render('pages/update', {
+      user: userresult
+    });
+  });
+});
+
+
 
 
 
@@ -251,4 +272,52 @@ app.post('/adduser', function (req, res) {
     //when complete redirect to the index
     res.redirect('/')
   })
+});
+
+// Route to handle the update form submission
+app.post('/doupdate', function (req, res) {
+  // Check if the user is logged in
+  if (!req.session.loggedin) {
+    res.redirect('/login');
+    return;
+  }
+
+  // Extract the updated data from the form
+  var updatedData = {
+    "gender": req.body.gender,
+    "name": {
+      "title": req.body.title,
+      "first": req.body.first,
+      "last": req.body.last
+    },
+    "location": {
+      "street": req.body.street,
+      "city": req.body.city,
+      "state": req.body.state,
+      "postcode": req.body.postcode
+    },
+    "email": req.body.email,
+    "login": {
+      "username": req.body.username,
+      "password": req.body.password
+    },
+    "dob": req.body.dob,
+    "picture": {
+      "large": req.body.large,
+      "medium": req.body.medium,
+      "thumbnail": req.body.thumbnail
+    },
+    "nat": req.body.nat
+  };
+
+  // Update the user's details in the database
+  db.collection('people').updateOne(
+    { "login.username": req.body.username }, // Search condition
+    { $set: updatedData }, // Data to update
+    function (err, result) {
+      if (err) throw err;
+      console.log('User updated successfully');
+      res.redirect('/profile?username=' + req.body.username); // Redirect to the updated profile page
+    }
+  );
 });
