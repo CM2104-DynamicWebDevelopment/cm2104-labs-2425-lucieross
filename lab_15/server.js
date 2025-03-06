@@ -90,7 +90,7 @@ app.get('/profile', function(req, res) {
 
 
     res.render('pages/profile', {
-      user: user
+      user: result
     })
   });
 
