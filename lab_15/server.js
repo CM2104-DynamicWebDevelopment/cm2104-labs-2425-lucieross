@@ -86,29 +86,25 @@ app.get('/login', function (req, res) {
 });
 
 
-app.get('/profile', function (req, res) {
+app.get('/updateuser', function (req, res) {
   if (!req.session.loggedin) {
     res.redirect('/login');
     return;
   }
 
+  var currentuser = req.session.currentuser;
 
-  var uname = req.query.username;
-
-
-  db.collection('people').findOne({
-    "login.username": uname
-  }, function (err, result) {
+  // Fetch the current user's details from the database
+  db.collection('people').findOne({"login.username": currentuser}, function (err, userresult) {
     if (err) throw err;
 
-
-
-    res.render('pages/profile', {
-      user: result
-    })
+    // Render the update page with the current user's details
+    res.render('pages/update', {
+      user: userresult
+    });
   });
-
 });
+
 //adduser route simply draws our adduser page
 app.get('/adduser', function (req, res) {
   if (!req.session.loggedin) {
@@ -276,13 +272,11 @@ app.post('/adduser', function (req, res) {
 
 // Route to handle the update form submission
 app.post('/doupdate', function (req, res) {
-  // Check if the user is logged in
   if (!req.session.loggedin) {
     res.redirect('/login');
     return;
   }
 
-  // Extract the updated data from the form
   var updatedData = {
     "gender": req.body.gender,
     "name": {
@@ -300,14 +294,7 @@ app.post('/doupdate', function (req, res) {
     "login": {
       "username": req.body.username,
       "password": req.body.password
-    },
-    "dob": req.body.dob,
-    "picture": {
-      "large": req.body.large,
-      "medium": req.body.medium,
-      "thumbnail": req.body.thumbnail
-    },
-    "nat": req.body.nat
+    }
   };
 
   // Update the user's details in the database
