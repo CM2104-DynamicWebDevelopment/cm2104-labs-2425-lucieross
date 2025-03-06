@@ -133,6 +133,14 @@ app.get('/logout', function (req, res) {
   res.redirect('/');
 });
 
+app.get('/update', function (req, res) {
+  if (!req.session.loggedin) {
+    res.redirect('/login');
+    return;
+  }
+  res.render('pages/update')
+});
+
 
 
 
