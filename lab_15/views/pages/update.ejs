@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<header>
+  <%- include('../partials/head') %>
+</header>
+
+<body class="container">
+  <header>
+    <%- include('../partials/header') %>
+  </header>
+
+  <main>
+    <div class="jumbotron">
+      <h2>Update Your Details</h2>
+
+      <!-- Form to update user details --> 
+      <form action="/doupdate" method="POST">
+          
+        <!-- Gender -->
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <select name="gender" id="gender" class="form-control">
+            <option value="male" <%= user.gender === 'male' ? 'selected' : '' %>>Male</option>
+            <option value="female" <%= user.gender === 'female' ? 'selected' : '' %>>Female</option>
+            <option value="other" <%= user.gender === 'other' ? 'selected' : '' %>>Other</option>
+          </select>
+        </div>
+
+        <!-- name-->
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" id="title" name="title" class="form-control" value="<%= user.name.title %>" />
+        </div>
+
+        <div class="form-group">
+          <label for="first">First Name</label>
+          <input type="text" id="first" name="first" class="form-control" value="<%= user.name.first %>" />
+        </div>
+
+        <div class="form-group">
+          <label for="last">Last Name</label>
+          <input type="text" id="last" name="last" class="form-control" value="<%= user.name.last %>" />
+        </div>
+
+        <!-- address -->
+        <div class="form-group">
+          <label for="street">Street Address</label>
+          <input type="text" id="street" name="street" class="form-control" value="<%= user.location.street %>" />
+        </div>
+
+        <div class="form-group">
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" class="form-control" value="<%= user.location.city %>" />
+        </div>
+
+        <div class="form-group">
+          <label for="state">State</label>
+          <input type="text" id="state" name="state" class="form-control" value="<%= user.location.state %>" />
+        </div>
+
+        <div class="form-group">
+          <label for="postcode">Postcode</label>
+          <input type="text" id="postcode" name="postcode" class="form-control" value="<%= user.location.postcode %>" />
+        </div>
+
+        <!-- email -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" class="form-control" value="<%= user.email %>" />
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary">Update</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <%- include('../partials/footer') %>
+  </footer>
+
+</body>
+
+</html>
