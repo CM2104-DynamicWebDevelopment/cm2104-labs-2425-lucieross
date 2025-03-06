@@ -129,6 +129,27 @@ app.get('/logout', function (req, res) {
   res.redirect('/');
 });
 
+app.get('/profile', function (req, res) {
+  if (!req.session.loggedin) {
+    res.redirect('/login');  // If the user is not logged in, redirect to the login page
+    return;
+  }
+
+  var uname = req.query.username;  // Get the username from the query string
+
+  db.collection('people').findOne({
+    "login.username": uname  // Query the database for the user based on the username
+  }, function (err, result) {
+    if (err) throw err;
+
+    // Render the profile page with the user's details
+    res.render('pages/profile', {
+      user: result
+    });
+  });
+});
+
+
 // Route to render the update user page
 app.get('/updateuser', function (req, res) {
   if (!req.session.loggedin) {
