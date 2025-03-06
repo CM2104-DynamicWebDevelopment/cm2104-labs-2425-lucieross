@@ -85,6 +85,7 @@ app.get('/profile', function(req, res) {
   
   
   var uname = req.query.username;
+  console.log(uname);
   
  
   db.collection('people').findOne({"login.username": uname}, function(err, result) {
@@ -95,8 +96,6 @@ app.get('/profile', function(req, res) {
     res.render('pages/profile', {
       user: result
     })
-    
-    console.log(result);
 
   })
 
