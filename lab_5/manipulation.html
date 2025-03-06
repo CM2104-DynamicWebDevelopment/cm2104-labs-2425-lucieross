@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UFT-8">
+        <title>Jedi</title>
+	</head>
+
+	<body>
+        <p id = "skittles"> Skittles</p>
+        <p>Fear</p>
+        <p>Anger</p>
+
+        <script>
+            let paragraphs = document.getElementsByTagName("p");
+            //console.log(paragraphs)
+            document.body.insertBefore(paragraphs[2],paragraphs[0]);
+
+            console.log(paragraphs.length);
+
+            let test = "cat"
+            for (i=0; i<paragraphs.length;i++){
+                console.log(i);
+                let header = i+1;
+                paragraphs[i].innerHTML = "<h" + header + "> paragraph " + test + "</h" + header+">"
+            }
+
+            let newpara = document.createElement("p");
+            let text = document.createTextNode("A Jedi craves not these things");
+            newpara.appendChild(text);
+            document.body.appendChild(newpara);
+        </script>
+    </body>
+</html>
