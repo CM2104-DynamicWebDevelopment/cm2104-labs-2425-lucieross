@@ -202,27 +202,27 @@ app.post('/doupdate', function(req, res) {
     }
   };
 
-  // Update the user details in MongoDB
-  db.collection('people').updateOne(
-    { "login.username": uname }, 
-    { $set: updatedDetails }, 
-    function(err, result) {
-      if (err) throw err;
-      console.log('User updated in database:', result);
 
+  // Update the user details in mongo
+  db.collection('people').updateOne(
+    { "login.username": uname }, // find the user
+    { $set: updatedDetails }, // update the user data with the new details
+    function(err, result) {
+
+      if (err) throw err;
+
+      db.collection('people').insertOne(updatedDetails, function(err, result) {
+        if (err) throw err;
+        console.log('saved to database')
+      })
+
+      req.session.user = { ...req.session.user, ...updatedDetails }; // Update the session data so that they can see changes
       req.session.user.login.username = updatedDetails.username;
       req.session.user.login.password = updatedDetails.password;
-      req.session.user.gender = updatedDetails.gender;
-      req.session.user.name = updatedDetails.name;
-      req.session.user.email = updatedDetails.email;
-      req.session.user.location = updatedDetails.location;
-
-      // Redirect to the profile page
-      res.redirect('/profile?username=' + updatedDetails.username); 
+      res.redirect('/profile?username=' + uname);  // Redirect to profile page
     }
   );
 });
-
 
 
 
