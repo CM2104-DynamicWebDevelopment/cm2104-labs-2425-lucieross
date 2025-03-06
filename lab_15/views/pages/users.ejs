@@ -13,8 +13,11 @@
 
   <main>
     <div class="jumbotron">
-      <h3>Welcome <%= loggedInUser.name.first %>!</h3> <!--Welcomes user-->
 
+
+      <h1> Welcome <%= user.name.first %> </h1>
+      <p> <%= user.email %> </p>
+      <img src="<%= user.picture.large %>" />
       <!--page to display all the users-->
       <h2>All Students</h2>
 
@@ -24,7 +27,8 @@
               <li>
                 <!-- create a link which directs to our /profile route and provides the username for tha user-->
                 <!-- display the users title, first and last name as the link text -->
-                <a href="/profile?username=<%= user.username %>"> <%= user.name.title+" "+user.name.first+" "+ user.name.last %> </a>
+                <img src="" />
+                <a href="/profile?username=<%= user.login.username %>"> <img src="<%=user.picture.thumbnail %> " /> <%= user.name.title+" "+user.name.first+" "+ user.name.last %> </a>
               </li>
             <% }); %>
           </ul>
