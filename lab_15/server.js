@@ -67,6 +67,9 @@ app.get('/', function(req, res) {
       users: result,
       loggedInUser: req.session.user
     })
+
+    console.log(users);
+    console.log(loggedInUser);
   });
 
 });
@@ -93,7 +96,7 @@ app.get('/profile', function(req, res) {
     res.render('pages/profile', {
       user: result
     })
-  });
+  })
 
 });
 //adduser route simply draws our adduser page
