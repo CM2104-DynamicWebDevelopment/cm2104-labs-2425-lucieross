@@ -268,8 +268,12 @@ app.post('/adduser', function (req, res) {
 
 //update
 app.post('/doupdate', function(req, res) {
-  // Get user name
-  const uname = req.session.user.login.username;
+  if (!req.session.loggedin) {
+    res.redirect('/login');
+    return;
+  }
+
+  const uname = req.session.currentuser; 
 
   // Get the updated details from the form
   const updatedDetails = {
@@ -279,9 +283,7 @@ app.post('/doupdate', function(req, res) {
       "first": req.body.first,
       "last": req.body.last
     },
-
     "email": req.body.email,
-
     "location": {
       "street": req.body.street,
       "city": req.body.city,
@@ -290,16 +292,18 @@ app.post('/doupdate', function(req, res) {
     }
   };
 
-  // Update the user details in mongo
+  // Update the user details in MongoDB
   db.collection('people').updateOne(
-    { "login.username": uname }, // find the user
-    { $set: updatedDetails }, // update the user data with the new details
+    { "login.username": uname }, // Find the user by username
+    { $set: updatedDetails }, // Update the user details with new ones
     function(err, result) {
-
       if (err) throw err;
 
-      req.session.user = { ...req.session.user, ...updatedDetails }; // Update the session data so that they can see changes
-      res.redirect('/profile?username=' + uname);  // Redirect to profile page
+      // Update the session user object with the new details
+      req.session.user = { ...req.session.user, ...updatedDetails };
+
+      // Redirect to the user's profile page
+      res.redirect('/profile?username=' + uname);  
     }
   );
 });
