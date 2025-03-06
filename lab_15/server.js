@@ -80,19 +80,21 @@ app.get('/login', function(req, res) {
 app.get('/profile', function(req, res) {
   if(!req.session.loggedin){res.redirect('/login');return;}
   
+  
   var uname = req.query.username;
   
  
   db.collection('people').findOne({"login.username": uname}, function(err, result) {
     if (err) throw err;
    
+
+
     res.render('pages/profile', {
       user: result
     })
   });
 
 });
-
 //adduser route simply draws our adduser page
 app.get('/adduser', function(req, res) {
   if(!req.session.loggedin){res.redirect('/login');return;}
@@ -181,8 +183,6 @@ app.post('/doupdate', function(req, res) {
 
   // Get the updated details from the form
   const updatedDetails = {
-    "username": req.body.username,
-    "password": req.body.password,
     "gender": req.body.gender,
     "name": {
       "title": req.body.title,
@@ -199,8 +199,6 @@ app.post('/doupdate', function(req, res) {
       "postcode": req.body.postcode
     }
   };
-
-
 
   // Update the user details in mongo
   db.collection('people').updateOne(
