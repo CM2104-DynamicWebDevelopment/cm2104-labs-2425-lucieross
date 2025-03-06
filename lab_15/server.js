@@ -202,6 +202,7 @@ app.post('/doupdate', function(req, res) {
     }
   };
 
+
   // Update the user details in mongo
   db.collection('people').updateOne(
     { "login.username": uname }, // find the user
@@ -211,6 +212,8 @@ app.post('/doupdate', function(req, res) {
       if (err) throw err;
 
       req.session.user = { ...req.session.user, ...updatedDetails }; // Update the session data so that they can see changes
+      req.session.user.login.username = updatedDetails.username;
+      req.session.user.login.password = updatedDetails.password;
       res.redirect('/profile?username=' + uname);  // Redirect to profile page
     }
   );
