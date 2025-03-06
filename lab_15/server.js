@@ -211,9 +211,14 @@ app.post('/doupdate', function(req, res) {
 
       if (err) throw err;
 
+      db.collection('people').insertOne(updatedDetails, function(err, result) {
+        if (err) throw err;
+        console.log('saved to database')
+      })
+
       req.session.user = { ...req.session.user, ...updatedDetails }; // Update the session data so that they can see changes
       req.session.user.login.username = updatedDetails.username;
-    req.session.user.login.password = updatedDetails.password;
+      req.session.user.login.password = updatedDetails.password;
       res.redirect('/profile?username=' + uname);  // Redirect to profile page
     }
   );
