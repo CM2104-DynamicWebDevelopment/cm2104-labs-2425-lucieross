@@ -18,6 +18,10 @@
       <form action="/doupdate" method="POST">
           
         <!-- ADD USERNAME AND PSSWORD-->
+        <div class ="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" class="form-control" value="<%= user.login.username %>" />
+        </div>
         <!-- Gender -->
         <div class="form-group">
           <label for="gender">Gender</label>
