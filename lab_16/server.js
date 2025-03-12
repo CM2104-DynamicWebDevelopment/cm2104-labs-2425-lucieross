@@ -20,13 +20,11 @@ io.on('connection', function (socket) {
         // join the room
         socket.join(data.room);
         console.log(`${data.username} has joined room: ${data.room}`);
-        
-        // Emit a message to the room
-        io.to(data.room).emit('chat message', {
-            username: 'System',
-            message: `${data.username} has joined the room.`,
-            room: data.room
+
+        io.to(data.room).emit('system message', {
+            message: `${data.username} has joined the. ${data.room}`
         });
+        
     });
 
     socket.on('disconnect', function () {
