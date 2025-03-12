@@ -1,57 +1,39 @@
-const express = require('express');
-const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+var socket = io();
+var roomJoined = false;
+var currentRoom = null;
 
-let users = {}; // Store users with their socket IDs
+//On form submit gets the context and emits a chat message
+$('#form').submit(function () {
+    var message = $('#input').val();
+    var username = $('#username').val(); 
+    var room = $('#room').val();
 
-// Serve static files from the "public" folder
-app.use(express.static('public'));
 
-// Set the view engine to ejs
-app.set('view engine', 'ejs');
+    if (message && username && room) {
 
-app.get('/', function (req, res) {
-    res.render('pages/index');
+        if (room !== currentRoom) {
+            if (currentRoom) { //Makes it so that user can switch rooms
+                // Emit leave room if switching rooms so that new meessage gets displayed
+                socket.emit('leave room', { room: currentRoom });
+                console.log('User left room:', currentRoom);
+            }
+            // Emit to join the new room
+            socket.emit('join room', { room: room, username: username });
+            currentRoom = room;  // Update the current room
+            roomJoined = true;    // Set true so the message is only disaplyed once
+        }
+        socket.emit('chat message', { username: username, message: message });
+        $("#input").val("");
+    }
+    return false;
+})
+
+socket.on('chat message', function(msg) { //adds message to the message list
+    $('#messages').append("<li><strong>" + msg.username + ":</strong> " + msg.message + "</li>");
+    window.scrollTo(0, document.body.scrollHeight); //scrolls to the latest message
 });
 
-io.on('connection', function (socket) {
-    console.log('a user connected');
-
-    // Track users by their socket ID
-    socket.on('join room', function (data) {
-        users[socket.id] = data.username;
-        console.log(`${data.username} has joined room: ${data.room}`);
-
-        // Join the room
-        socket.join(data.room);
-        
-        // Emit a system message to the room
-        io.to(data.room).emit('system message', {
-            message: `${data.username} has joined the room: ${data.room}`
-        });
-    });
-
-    // Handles incoming chat messages
-    socket.on('chat message', function (msg) {
-        io.emit('chat message', msg); // message to everyone
-    });
-
-    // Handle room leaving
-    socket.on('leave room', function (data) {
-        socket.leave(data.room);
-        console.log(`${users[socket.id]} has left room: ${data.room}`);
-    });
-
-    // Handle user disconnecting
-    socket.on('disconnect', function () {
-        console.log('user disconnected');
-        // Clean up the users list when they disconnect
-        delete users[socket.id];
-    });
-});
-
-// Start the server
-http.listen(8080, function () {
-    console.log('listening on: 8080');
+socket.on('system message', function(msg) {
+    $('#messages').append("<li><em>" + msg.message + "</em></li>");
+    window.scrollTo(0, document.body.scrollHeight); // Scroll to the latest message
 });
