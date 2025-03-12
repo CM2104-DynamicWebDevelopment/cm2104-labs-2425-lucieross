@@ -4,9 +4,13 @@ var socket = io();
 $('#form').submit(function () {
     var message = $('#input').val();
     var username = $('#username').val(); 
-    if (message && username) {
+    var room = $('#room').val();
+
+
+    if (message && username && room) {
+        socket.emit('join room', { room: room, username: username });
         socket.emit('chat message', { username: username, message: message });
-    $("#input").val("");
+        $("#input").val("");
     }
     return false;
 })

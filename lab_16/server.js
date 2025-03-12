@@ -16,6 +16,12 @@ app.get('/', function(req, res){
 io.on('connection', function (socket) {
     console.log('a user connected');
 
+    socket.on('join room', function (data) {
+        // join the room
+        socket.join(data.room);
+        console.log(`${data.username} has joined room: ${data.room}`);
+    });
+
     socket.on('disconnect', function () {
         console.log('user disconnected');
     });
