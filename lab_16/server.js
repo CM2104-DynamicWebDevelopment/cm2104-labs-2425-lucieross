@@ -13,12 +13,16 @@ app.get('/', function (req, res) {
     res.render('pages/index');
 });
 
+// Store connected users
+let users = {};
+
 io.on('connection', function (socket) {
     console.log('a user connected');
 
-    // Handles joining a room
+    // Handle user joining a room
     socket.on('join room', function (data) {
-        // Joins the specified room
+        socket.username = data.username;
+        users[socket.id] = data.username;  // Store the user and their socket ID
         socket.join(data.room);
         console.log(`${data.username} has joined room: ${data.room}`);
         
@@ -28,14 +32,34 @@ io.on('connection', function (socket) {
         });
     });
 
-    // Handles incoming chat messages
+    // Handle chat messages
     socket.on('chat message', function (msg) {
-        io.emit('chat message', msg); // message to everyone
+        io.emit('chat message', msg); // Broadcast to everyone in the room
+    });
+
+    // Handle private messages
+    socket.on('private message', function (data) {
+        const recipientSocket = Object.keys(users).find(
+            (socketId) => users[socketId] === data.recipient
+        );
+
+        if (recipientSocket) {
+            // Send a private message to the recipient
+            io.to(recipientSocket).emit('private message', {
+                sender: socket.username,
+                message: data.message
+            });
+        } else {
+            socket.emit('system message', {
+                message: `User ${data.recipient} not found.`
+            });
+        }
     });
 
     // Handle user disconnecting
     socket.on('disconnect', function () {
         console.log('user disconnected');
+        delete users[socket.id];  // Remove user from the list when they disconnect
     });
 });
 

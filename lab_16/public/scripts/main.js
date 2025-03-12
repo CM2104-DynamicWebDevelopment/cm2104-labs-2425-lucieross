@@ -2,38 +2,54 @@ var socket = io();
 var roomJoined = false;
 var currentRoom = null;
 
-//On form submit gets the context and emits a chat message
+// On form submit, send a message
 $('#form').submit(function () {
     var message = $('#input').val();
-    var username = $('#username').val(); 
+    var username = $('#username').val();
     var room = $('#room').val();
-
+    var recipient = $('#recipient').val(); // New input for private messages
 
     if (message && username && room) {
-
         if (room !== currentRoom) {
-            if (currentRoom) { //Makes it so that user can switch rooms
-                // Emit leave room if switching rooms
+            if (currentRoom) {
                 socket.emit('leave room', { room: currentRoom });
                 console.log('User left room:', currentRoom);
             }
-            // Emit to join the new room
             socket.emit('join room', { room: room, username: username });
-            currentRoom = room;  // Update the current room
-            roomJoined = true;    // Set true so the message is only disaplyed once
+            currentRoom = room;
+            roomJoined = true;
         }
-        socket.emit('chat message', { username: username, message: message });
+
+        if (recipient) {
+            // If recipient is specified, send a private message
+            socket.emit('private message', {
+                recipient: recipient,
+                message: message
+            });
+        } else {
+            // Otherwise, send a public message
+            socket.emit('chat message', { username: username, message: message });
+        }
+
         $("#input").val("");
     }
     return false;
-})
-
-socket.on('chat message', function(msg) { //adds message to the message list
-    $('#messages').append("<li><strong>" + msg.username + ":</strong> " + msg.message + "</li>");
-    window.scrollTo(0, document.body.scrollHeight); //scrolls to the latest message
 });
 
-socket.on('system message', function(msg) {
+// Display chat messages
+socket.on('chat message', function (msg) {
+    $('#messages').append("<li><strong>" + msg.username + ":</strong> " + msg.message + "</li>");
+    window.scrollTo(0, document.body.scrollHeight);
+});
+
+// Display private messages
+socket.on('private message', function (msg) {
+    $('#messages').append("<li><strong>Private from " + msg.sender + ":</strong> " + msg.message + "</li>");
+    window.scrollTo(0, document.body.scrollHeight);
+});
+
+// Display system messages
+socket.on('system message', function (msg) {
     $('#messages').append("<li><em>" + msg.message + "</em></li>");
-    window.scrollTo(0, document.body.scrollHeight); // Scroll to the latest message
+    window.scrollTo(0, document.body.scrollHeight);
 });
