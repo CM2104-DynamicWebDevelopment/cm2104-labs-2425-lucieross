@@ -28,7 +28,6 @@ io.on('connection', function (socket) {
         });
     });
 
-
     // Handles incoming chat messages
     socket.on('chat message', function (msg) {
         io.emit('chat message', msg); // message to everyone

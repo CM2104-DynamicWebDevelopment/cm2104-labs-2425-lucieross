@@ -13,7 +13,7 @@ $('#form').submit(function () {
 
         if (room !== currentRoom) {
             if (currentRoom) { //Makes it so that user can switch rooms
-                // Emit leave room if switching rooms so that new meessage gets displayed
+                // Emit leave room if switching rooms
                 socket.emit('leave room', { room: currentRoom });
                 console.log('User left room:', currentRoom);
             }
