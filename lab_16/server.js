@@ -3,8 +3,6 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
-let users = {}; // Store users with their socket IDs
-
 // Serve static files from the "public" folder
 app.use(express.static('public'));
 
@@ -18,13 +16,11 @@ app.get('/', function (req, res) {
 io.on('connection', function (socket) {
     console.log('a user connected');
 
-    // Track users by their socket ID
+    // Handles joining a room
     socket.on('join room', function (data) {
-        users[socket.id] = data.username;
-        console.log(`${data.username} has joined room: ${data.room}`);
-
-        // Join the room
+        // Joins the specified room
         socket.join(data.room);
+        console.log(`${data.username} has joined room: ${data.room}`);
         
         // Emit a system message to the room
         io.to(data.room).emit('system message', {
@@ -32,40 +28,15 @@ io.on('connection', function (socket) {
         });
     });
 
-    // Handle private messaging
-    socket.on('private message', function (data) {
-        // Find the recipient's socket ID
-        const recipientSocketId = Object.keys(users).find(socketId => users[socketId] === data.friend);
-
-        if (recipientSocketId) {
-            io.to(recipientSocketId).emit('private message', {
-                message: data.message,
-                from: users[socket.id] // The sender's username
-            });
-        } else {
-            socket.emit('private message', {
-                message: 'User not found!',
-                from: 'System'
-            });
-        }
-    });
 
     // Handles incoming chat messages
     socket.on('chat message', function (msg) {
         io.emit('chat message', msg); // message to everyone
     });
 
-    // Handle room leaving
-    socket.on('leave room', function (data) {
-        socket.leave(data.room);
-        console.log(`${users[socket.id]} has left room: ${data.room}`);
-    });
-
     // Handle user disconnecting
     socket.on('disconnect', function () {
         console.log('user disconnected');
-        // Clean up the users list when they disconnect
-        delete users[socket.id];
     });
 });
 
