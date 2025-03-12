@@ -3,40 +3,43 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
-//code to define the public "static" folder
-app.use(express.static('public'))
+// Serve static files from the "public" folder
+app.use(express.static('public'));
 
-// set the view engine to ejs
+// Set the view engine to ejs
 app.set('view engine', 'ejs');
 
-app.get('/', function(req, res){
+app.get('/', function (req, res) {
     res.render('pages/index');
 });
 
 io.on('connection', function (socket) {
     console.log('a user connected');
 
+    // Handles joining a room
     socket.on('join room', function (data) {
-        // join the room
+        // Joins the specified room
         socket.join(data.room);
         console.log(`${data.username} has joined room: ${data.room}`);
-    
-        // Emit a system message to the room 
+        
+        // Emit a system message to the room
         io.to(data.room).emit('system message', {
             message: `${data.username} has joined the room: ${data.room}`
         });
     });
-    
 
+    // Handles incoming chat messages
+    socket.on('chat message', function (msg) {
+        io.emit('chat message', msg); // message to everyone
+    });
+
+    // Handle user disconnecting
     socket.on('disconnect', function () {
         console.log('user disconnected');
     });
-
-    socket.on('chat message', function (msg) { //deals with message
-        io.emit('chat message', msg); //prints the message to the site
-    });
 });
 
-http.listen(8080, function(){
+// Start the server
+http.listen(8080, function () {
     console.log('listening on: 8080');
 });
