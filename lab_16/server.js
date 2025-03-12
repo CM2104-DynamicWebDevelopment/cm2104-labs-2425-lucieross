@@ -3,6 +3,8 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
+let users = {}; //Stores users
+
 // Serve static files from the "public" folder
 app.use(express.static('public'));
 
@@ -27,6 +29,24 @@ io.on('connection', function (socket) {
             message: `${data.username} has joined the room: ${data.room}`
         });
     });
+
+    socket.on('private message', function (data) { //priavete messaging
+        const recipientSocketId = Object.keys(users).find(socketId => users[socketId] === data.recipient);
+
+        if (recipientSocketId) {
+            io.to(recipientSocketId).emit('private message', {
+                message: data.message,
+                from: users[socket.id] // The sender's username
+            });
+        } else {
+            // If user not found 
+            socket.emit('private message', {
+                message: 'User not found!',
+                from: 'System'
+            });
+        }
+    });
+
 
     // Handles incoming chat messages
     socket.on('chat message', function (msg) {
