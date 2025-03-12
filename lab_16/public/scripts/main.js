@@ -1,5 +1,6 @@
 var socket = io();
 var roomJoined = false;
+var currentRoom = null;
 
 //On form submit gets the context and emits a chat message
 $('#form').submit(function () {
@@ -10,9 +11,16 @@ $('#form').submit(function () {
 
     if (message && username && room) {
 
-        if (!roomJoined) { //Makes it so that the enter room is only disaplyed once
+        if (room !== currentRoom) {
+            if (currentRoom) { //Makes it so that user can switch rooms
+                // Emit leave room if switching rooms
+                socket.emit('leave room', { room: currentRoom });
+                console.log('User left room:', currentRoom);
+            }
+            // Emit to join the new room
             socket.emit('join room', { room: room, username: username });
-            roomJoined = true; 
+            currentRoom = room;  // Update the current room
+            roomJoined = true;    // Set true so the message is only disaplyed once
         }
         socket.emit('chat message', { username: username, message: message });
         $("#input").val("");
