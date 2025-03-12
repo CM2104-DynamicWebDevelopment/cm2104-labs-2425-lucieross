@@ -9,3 +9,8 @@ $('#form').submit(function () {
     }
     return false;
 })
+
+socket.on('chat message', function(msg) { //adds message to the message list
+    $('#messages').append("<li>"+msg+"</li>");
+    window.scrollTo(0, document.body.scrollHeight);
+});
