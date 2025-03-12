@@ -3,7 +3,7 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
-let users = {}; //Stores users
+let users = ["Ava", "William"]; //stores users
 
 // Serve static files from the "public" folder
 app.use(express.static('public'));
