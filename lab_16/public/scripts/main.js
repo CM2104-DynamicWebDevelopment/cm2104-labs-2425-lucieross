@@ -1,4 +1,5 @@
 var socket = io();
+var roomJoined = false;
 
 //On form submit gets the context and emits a chat message
 $('#form').submit(function () {
@@ -8,7 +9,11 @@ $('#form').submit(function () {
 
 
     if (message && username && room) {
-        socket.emit('join room', { room: room, username: username });
+
+        if (!roomJoined) { //Makes it so that the enter room is only disaplyed once
+            socket.emit('join room', { room: room, username: username });
+            roomJoined = true; 
+        }
         socket.emit('chat message', { username: username, message: message });
         $("#input").val("");
     }
