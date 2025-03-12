@@ -1,0 +1,50 @@
+body, td { 
+    font-size: 10pt; 
+    text-align: center; 
+} 
+
+h1 { 
+    color: green; 
+} 
+
+table { 
+    background-color: black; 
+    border: 1px black solid; 
+    border-collapse: collapse; 
+} 
+
+th { 
+    font-size: 15px; 
+    padding: 5px 8px; 
+    border: 1px outset silver; 
+    background-color: yellow; 
+    color: black; 
+
+} 
+
+tr { 
+    border: 1px outset silver; 
+    padding: 5px 8px; 
+    background-color: white; 
+    margin: 1px; 
+} 
+
+tr.zebrastripe { 
+    background-color: rgb(52, 255, 52); 
+} 
+
+td { 
+    border: 0.5px outset silver; 
+    border-collapse: collapse; 
+    padding: 5px 8px; 
+} 
+
+.center { 
+    margin-left: auto; 
+    margin-right: auto; 
+} 
+
+tr:hover {
+    background-color: #EBECCD;
+}
+

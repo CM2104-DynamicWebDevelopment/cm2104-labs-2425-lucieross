@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<header>
+  <%- include('../partials/head') %>
+</header>
+
+<body class="container">
+  <header>
+    <%- include('../partials/header') %>
+  </header>
+
+  <main>
+    <div class="jumbotron">
+      <h1>Update Your Profile</h1>
+      <form action="/doupdate" method="POST">
+        <input type="hidden" name="username" value="<%= user.login.username %>">
+
+        <!-- Title -->
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" value="<%= user.name.title %>"><br>
+
+        <!-- First Name -->
+        <label for="first">First Name:</label>
+        <input type="text" id="first" name="first" value="<%= user.name.first %>"><br>
+
+        <!-- Last Name -->
+        <label for="last">Last Name:</label>
+        <input type="text" id="last" name="last" value="<%= user.name.last %>"><br>
+
+        <!-- Email -->
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="<%= user.email %>"><br>
+
+        <!-- Street -->
+        <label for="street">Street:</label>
+        <input type="text" id="street" name="street" value="<%= user.location.street %>"><br>
+
+        <!-- City -->
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" value="<%= user.location.city %>"><br>
+
+        <!-- State -->
+        <label for="state">State:</label>
+        <input type="text" id="state" name="state" value="<%= user.location.state %>"><br>
+
+        <!-- Postcode -->
+        <label for="postcode">Postcode:</label>
+        <input type="text" id="postcode" name="postcode" value="<%= user.location.postcode %>"><br>
+
+        <!-- Gender -->
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender">
+          <option value="male" <%= user.gender === 'male' ? 'selected' : '' %>>Male</option>
+          <option value="female" <%= user.gender === 'female' ? 'selected' : '' %>>Female</option>
+          <option value="other" <%= user.gender === 'other' ? 'selected' : '' %>>Other</option>
+        </select><br>
+
+        <!-- Date of Birth -->
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" value="<%= user.dob %>"><br>
+
+        <!-- Password -->
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password" value="<%= user.login.password %>"><br>
+
+        <!-- Large Picture URL -->
+        <label for="large">Large Picture URL:</label>
+        <input type="text" id="large" name="large" value="<%= user.picture.large %>"><br>
+
+        <!-- Medium Picture URL -->
+        <label for="medium">Medium Picture URL:</label>
+        <input type="text" id="medium" name="medium" value="<%= user.picture.medium %>"><br>
+
+        <!-- Thumbnail Picture URL -->
+        <label for="thumbnail">Thumbnail Picture URL:</label>
+        <input type="text" id="thumbnail" name="thumbnail" value="<%= user.picture.thumbnail %>"><br>
+
+        <!-- Nationality -->
+        <label for="nat">Nationality:</label>
+        <input type="text" id="nat" name="nat" value="<%= user.nat %>"><br>
+
+        <button type="submit">Update</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>
