@@ -3,7 +3,7 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
-let users = ["Ava", "William"]; //stores users
+let users = {}; // Store users with their socket IDs
 
 // Serve static files from the "public" folder
 app.use(express.static('public'));
@@ -18,11 +18,13 @@ app.get('/', function (req, res) {
 io.on('connection', function (socket) {
     console.log('a user connected');
 
-    // Handles joining a room
+    // Track users by their socket ID
     socket.on('join room', function (data) {
-        // Joins the specified room
-        socket.join(data.room);
+        users[socket.id] = data.username;
         console.log(`${data.username} has joined room: ${data.room}`);
+
+        // Join the room
+        socket.join(data.room);
         
         // Emit a system message to the room
         io.to(data.room).emit('system message', {
@@ -30,8 +32,10 @@ io.on('connection', function (socket) {
         });
     });
 
-    socket.on('private message', function (data) { //priavete messaging
-        const recipientSocketId = Object.keys(users).find(socketId => users[socketId] === data.recipient);
+    // Handle private messaging
+    socket.on('private message', function (data) {
+        // Find the recipient's socket ID
+        const recipientSocketId = Object.keys(users).find(socketId => users[socketId] === data.friend);
 
         if (recipientSocketId) {
             io.to(recipientSocketId).emit('private message', {
@@ -39,7 +43,6 @@ io.on('connection', function (socket) {
                 from: users[socket.id] // The sender's username
             });
         } else {
-            // If user not found 
             socket.emit('private message', {
                 message: 'User not found!',
                 from: 'System'
@@ -47,15 +50,22 @@ io.on('connection', function (socket) {
         }
     });
 
-
     // Handles incoming chat messages
     socket.on('chat message', function (msg) {
         io.emit('chat message', msg); // message to everyone
     });
 
+    // Handle room leaving
+    socket.on('leave room', function (data) {
+        socket.leave(data.room);
+        console.log(`${users[socket.id]} has left room: ${data.room}`);
+    });
+
     // Handle user disconnecting
     socket.on('disconnect', function () {
         console.log('user disconnected');
+        // Clean up the users list when they disconnect
+        delete users[socket.id];
     });
 });
 
