@@ -19,7 +19,14 @@ io.on('connection', function (socket) {
     socket.on('join room', function (data) {
         // join the room
         socket.join(data.room);
-        io.emit(`${data.username} has joined room: ${data.room}`);
+        console.log(`${data.username} has joined room: ${data.room}`);
+        
+        // Emit a message to the room
+        io.to(data.room).emit('chat message', {
+            username: 'System',
+            message: `${data.username} has joined the room.`,
+            room: data.room
+        });
     });
 
     socket.on('disconnect', function () {
