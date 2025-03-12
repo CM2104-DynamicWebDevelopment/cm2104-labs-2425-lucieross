@@ -5,7 +5,7 @@ $('#form').submit(function () {
     var message = $('#input').val();
     var username = $('#username').val(); 
     if (message && username) {
-    socket.emit('chat message', username, message);
+        socket.emit('chat message', { username: username, message: message });
     $("#input").val("");
     }
     return false;
