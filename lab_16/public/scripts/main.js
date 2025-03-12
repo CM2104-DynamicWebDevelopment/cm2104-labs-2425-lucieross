@@ -4,10 +4,10 @@ var currentRoom = null;
 
 // On form submit, send a message
 $('#form').submit(function () {
-    var message = $('#input').val();
-    var username = $('#username').val();
-    var room = $('#room').val();
-    var recipient = $('#recipient').val(); // New input for private messages
+    var message = $('#input').val(); //message
+    var username = $('#username').val(); //username
+    var room = $('#room').val(); //room
+    var recipient = $('#recipient').val(); //friend user
 
     if (message && username && room) {
         if (room !== currentRoom) {
@@ -21,13 +21,12 @@ $('#form').submit(function () {
         }
 
         if (recipient) {
-            // If recipient is specified, send a private message
+            // send a private message
             socket.emit('private message', {
                 recipient: recipient,
                 message: message
             });
         } else {
-            // Otherwise, send a public message
             socket.emit('chat message', { username: username, message: message });
         }
 

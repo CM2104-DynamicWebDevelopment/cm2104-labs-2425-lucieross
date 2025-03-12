@@ -22,7 +22,7 @@ io.on('connection', function (socket) {
     // Handle user joining a room
     socket.on('join room', function (data) {
         socket.username = data.username;
-        users[socket.id] = data.username;  // Store the user and their socket ID
+        users[socket.id] = data.username;  // Store the user and their socket ID for priv messaging
         socket.join(data.room);
         console.log(`${data.username} has joined room: ${data.room}`);
         
@@ -37,14 +37,14 @@ io.on('connection', function (socket) {
         io.emit('chat message', msg); // Broadcast to everyone in the room
     });
 
-    // Handle private messages
+    // Handles private messages
     socket.on('private message', function (data) {
         const recipientSocket = Object.keys(users).find(
             (socketId) => users[socketId] === data.recipient
         );
 
         if (recipientSocket) {
-            // Send a private message to the recipient
+            // Send a private message
             io.to(recipientSocket).emit('private message', {
                 sender: socket.username,
                 message: data.message
